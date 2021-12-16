@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: marked_blog
+  datasource:
+    url: jdbc:mysql://localhost:3306/marked_blog
+    username: root
+    password: 290134
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 5MB
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      table-prefix: marked_
+  mapper-locations: classpath:mapper/*.xml

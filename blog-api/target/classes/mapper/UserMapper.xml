@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mark.blog.dao.mapper.UserMapper">
+
+
+    <select id="findUserByArticleId" parameterType="java.lang.Long" resultType="java.lang.String">
+        select username from marked_user
+        where id = (
+            select author_id from marked_article
+            where id = #{articleId}
+        )
+    </select>
+
+    <insert id="insertAuthorAndTag">
+        insert into marked_user_tag
+        values (#{authorId}, #{tagId})
+    </insert>
+
+    <select id="findAuthorByTag" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select user_id from marked_user_tag
+        where tag_id=#{tagId}
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mark.blog.dao.mapper.ArticleMapper">
+
+
+    <select id="findArticlesByTagId" parameterType="java.lang.Long" resultType="com.mark.blog.dao.pojo.Article">
+        select * from marked_article
+        where id in (
+            select article_id from marked_article_tag
+            where tag_id = #{tagId}
+            )
+    </select>
+
+    <insert id="insertArticleAndTag">
+        insert into marked_article_tag
+        values (#{articleId}, #{tagId})
+    </insert>
+
+</mapper>

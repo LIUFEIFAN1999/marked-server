@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mark.blog.dao.mapper.TagMapper">
+
+
+    <select id="listTagsByArticle" parameterType="java.lang.Long" resultType="com.mark.blog.dao.pojo.Tag">
+        select id, name from marked_tag
+        where id in (
+            select tag_id from marked_article_tag
+            where article_id = #{articleId}
+        )
+    </select>
+
+    <select id="listTagsByUser" parameterType="java.lang.Long" resultType="com.mark.blog.dao.pojo.Tag">
+        select id, name from marked_tag
+        where id in (
+            select tag_id from marked_user_tag
+            where user_id = #{userId}
+        )
+    </select>
+
+</mapper>
