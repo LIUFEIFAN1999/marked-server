@@ -12,6 +12,9 @@ spring:
   servlet:
     multipart:
       max-file-size: 5MB
+  redis:
+    host: 106.15.184.199
+    port: 36220
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -19,3 +22,4 @@ mybatis-plus:
     db-config:
       table-prefix: marked_
   mapper-locations: classpath:mapper/*.xml
+

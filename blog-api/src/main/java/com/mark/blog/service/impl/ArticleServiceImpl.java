@@ -135,6 +135,16 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(path);
     }
 
+    @Override
+    public Result findArticleByKeyword(String keyword) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Article::getTitle, "%"+keyword+"%");
+        queryWrapper.orderByDesc(Article::getCreateTime);
+        List<Article> articleList = articleMapper.selectList(queryWrapper);
+        List<ArticleVo> articleVoList = transList(articleList);
+        return Result.success(articleVoList);
+    }
+
 
     private void insertArticleAndTag(Long articleId, Long tagId) {
         articleMapper.insertArticleAndTag(articleId, tagId);

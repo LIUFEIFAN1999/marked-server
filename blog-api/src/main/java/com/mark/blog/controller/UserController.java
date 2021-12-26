@@ -36,4 +36,9 @@ public class UserController {
     public Result findAuthorDetailByArticleId(@PathVariable("articleId") Long articleId) {
         return articleService.findAuthorDetailByArticleId(articleId);
     }
+
+    @PostMapping("current")
+    public Result getCurrentUser(@RequestHeader("Authorization") String token){
+        return userService.findUserByToken(token);
+    }
 }

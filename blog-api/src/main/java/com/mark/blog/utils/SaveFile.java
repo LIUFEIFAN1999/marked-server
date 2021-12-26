@@ -1,5 +1,8 @@
 package com.mark.blog.utils;
 
+import io.github.furstenheim.CopyDown;
+import io.github.furstenheim.Options;
+import io.github.furstenheim.OptionsBuilder;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,13 +13,21 @@ import java.util.UUID;
 
 public class SaveFile {
     public static String string2md(final String filename, final String content) {
-            String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
-            String url_path = "/markdown/"+ randomName(filename);
-            String savePath = staticPath + url_path;
-            File fileText = new File(savePath);
+        OptionsBuilder optionsBuilder = OptionsBuilder.anOptions();
+        Options options = optionsBuilder.withBr("-")
+                // more options
+                .build();
+        CopyDown converter = new CopyDown(options);
+        String markdown = converter.convert(content);
+        System.out.println(markdown);
+
+        String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+        String url_path = "/markdown/"+ randomName(filename);
+        String savePath = staticPath + url_path;
+        File fileText = new File(savePath);
         try {
             FileWriter fileWriter = new FileWriter(fileText);
-            fileWriter.write(content);
+            fileWriter.write(markdown);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

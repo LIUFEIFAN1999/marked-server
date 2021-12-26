@@ -1,10 +1,13 @@
 package com.mark.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mark.blog.controller.vo.Result;
 import com.mark.blog.controller.vo.UserVo;
 import com.mark.blog.dao.mapper.UserMapper;
 import com.mark.blog.dao.pojo.User;
 import com.mark.blog.service.ArticleService;
+import com.mark.blog.service.LoginService;
 import com.mark.blog.service.TagService;
 import com.mark.blog.service.UserService;
 import com.mark.blog.service.bo.ArticleSum;
@@ -25,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private ArticleService articleService;
+
+    @Resource
+    private LoginService loginService;
 
     /**
      * 根据文章id查找作者名字
@@ -48,10 +54,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+
+    public User findUser(String username, String password) {
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userLambdaQueryWrapper.eq(User::getUsername, username);
+        userLambdaQueryWrapper.eq(User::getPassword, password);
+        userLambdaQueryWrapper.select(User::getId, User::getUsername, User::getAvatar, User::getEmail);
+        userLambdaQueryWrapper.last("limit 1");
+        return userMapper.selectOne(userLambdaQueryWrapper);
+    }
+
+    @Override
     public void insertAuthorAndTag(Long authorId, Long tagId) {
         if(userMapper.findAuthorByTag(tagId)==null){
             userMapper.insertAuthorAndTag(authorId, tagId);
         }
+    }
+
+    @Override
+    public Result findUserByToken(String token) {
+        User user = loginService.verifyLogin(token);
+        if(user == null){
+            return Result.fail(1002, "token不合法");
+        }
+        return Result.success(user);
+    }
+
+    @Override
+    public User findUserByName(String username) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("username", username);
+        return userMapper.selectOne(userQueryWrapper);
+    }
+
+    @Override
+    public void insertUser(User user) {
+        userMapper.insert(user);
     }
 
     /**

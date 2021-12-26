@@ -25,7 +25,7 @@ public class SwaggerConfig {
                 .enable(true)
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant("/blog/**"))
+                .paths(PathSelectors.ant("/**"))
                 .build();
     }
 

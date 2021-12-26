@@ -62,4 +62,6 @@ public interface ArticleService {
     Result addArticle(ArticleVo articleVo);
 
     Result uploadImg(MultipartFile file);
+
+    Result findArticleByKeyword(String keyword);
 }

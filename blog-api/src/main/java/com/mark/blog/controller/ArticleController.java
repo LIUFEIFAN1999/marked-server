@@ -80,5 +80,8 @@ public class ArticleController {
         return articleService.uploadImg(file);
     }
 
-
+    @PostMapping("list/keyword/{keyword}")
+    public Result findArticleByKeyword(@PathVariable("keyword") String keyword){
+        return articleService.findArticleByKeyword(keyword);
+    }
 }
