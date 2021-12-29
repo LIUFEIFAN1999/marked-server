@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("blog/articles")
@@ -23,7 +22,7 @@ public class ArticleController {
      * @return 文章列表
      */
     @PostMapping("list")
-    public Result listArticles(@RequestBody PageParams pageParams) throws IOException {
+    public Result listArticles(@RequestBody PageParams pageParams) {
         return articleService.listArticles(pageParams);
     }
 
@@ -70,16 +69,32 @@ public class ArticleController {
         return articleService.findHotArticlesByAuthorId(authorId);
     }
 
+    /**
+     * 添加文章
+     * @param articleVo 文章对象
+     * @param token 身份认证
+     * @return 添加是否成功
+     */
     @PostMapping("add")
-    public Result AddArticle(@RequestBody ArticleVo articleVo){
-        return articleService.addArticle(articleVo);
+    public Result AddArticle(@RequestBody ArticleVo articleVo, @RequestHeader("Authorization") String token){
+        return articleService.addArticle(articleVo, token);
     }
 
+    /**
+     * 上传图片
+     * @param file 图片文件
+     * @return 文件路径
+     */
     @PostMapping("uploadImg")
     public Result uploadImg(@RequestParam("image") MultipartFile file) {
         return articleService.uploadImg(file);
     }
 
+    /**
+     * 根据关键字查询
+     * @param keyword 关键词
+     * @return 文章列表
+     */
     @PostMapping("list/keyword/{keyword}")
     public Result findArticleByKeyword(@PathVariable("keyword") String keyword){
         return articleService.findArticleByKeyword(keyword);

@@ -1,5 +1,6 @@
 package com.mark.blog.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -10,6 +11,7 @@ import com.mark.blog.controller.vo.TagVo;
 import com.mark.blog.dao.mapper.ArticleMapper;
 import com.mark.blog.dao.pojo.Article;
 import com.mark.blog.dao.pojo.Tag;
+import com.mark.blog.dao.pojo.User;
 import com.mark.blog.service.ArticleService;
 import com.mark.blog.service.TagService;
 import com.mark.blog.service.UserService;
@@ -17,6 +19,7 @@ import com.mark.blog.service.bo.ArticleSum;
 import com.mark.blog.utils.SaveFile;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +38,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
     @Override
     public Result listArticles(PageParams pageParams) {
@@ -99,11 +105,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Result addArticle(ArticleVo articleVo) {
+    public Result addArticle(ArticleVo articleVo, String token) {
         Article article = new Article();
         BeanUtils.copyProperties(articleVo, article);
-        //作者id
-        Long authorId = 1L;
+        String jsonStr = redisTemplate.opsForValue().get("TOKEN_"+token);
+        User user = JSON.parseObject(jsonStr, User.class);
+        Long authorId = user.getId();
         article.setAuthorId(authorId);
         article.setPageView(0);
         article.setCreateTime(new DateTime().getMillis());

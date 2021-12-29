@@ -3,6 +3,7 @@ package com.mark.blog.utils;
 import io.github.furstenheim.CopyDown;
 import io.github.furstenheim.Options;
 import io.github.furstenheim.OptionsBuilder;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +22,9 @@ public class SaveFile {
         String markdown = converter.convert(content);
         System.out.println(markdown);
 
-        String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+        ApplicationHome h = new ApplicationHome(SaveFile.class);
+        File jarF = h.getSource();
+        String staticPath = jarF.getParentFile().toString()+"/build";
         String url_path = "/markdown/"+ randomName(filename);
         String savePath = staticPath + url_path;
         File fileText = new File(savePath);
@@ -43,7 +46,9 @@ public class SaveFile {
     }
 
     public static String saveImg(MultipartFile file) {
-        String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+        ApplicationHome h = new ApplicationHome(SaveFile.class);
+        File jarF = h.getSource();
+        String staticPath = jarF.getParentFile().toString()+"/build";
         //获取文件名
         String fileName = file.getOriginalFilename();
         // 图片存储目录及图片名称

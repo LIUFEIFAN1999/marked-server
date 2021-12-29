@@ -59,7 +59,7 @@ public interface ArticleService {
 
     Result findArticleById(Long articleId);
 
-    Result addArticle(ArticleVo articleVo);
+    Result addArticle(ArticleVo articleVo, String token);
 
     Result uploadImg(MultipartFile file);
 
